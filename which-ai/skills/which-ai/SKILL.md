@@ -5,7 +5,7 @@ compatibility: opencode
 metadata:
   audience: agents
   workflow: routing
-  version: 2.1.2
+  version: 2.2.0
 ---
 
 # which-ai: The Intent-Based Orchestrator
@@ -55,5 +55,11 @@ python3 "$SKILL_DIR/scripts/route_model.py" --deployment <local|cloud> [--budget
 ## 4. Output
 Present the router's terminal output exactly, then at most two sentences of context (for local:
 the ranking assumes 4-bit weights and reads parameter counts from model names, so open models
-without a size in their name are not ranked). If the router prints an error, report it and what
+without a size in their name are not ranked).
+
+**Brand-new models.** Arena needs days to weeks of votes before it rates a model, so the ranked list
+can lag behind releases. The router therefore also lists every OpenRouter model released in the last
+30 days (`--new-days N` to change) that has no Arena rating yet, newest first — including models
+released today. Always show that section. Say plainly that these have no quality score yet; never rank
+them against rated models or guess how good they are. If the router prints an error, report it and what
 failed — do not substitute a recommendation from memory.
