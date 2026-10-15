@@ -20,7 +20,7 @@ If you’re still hardcoding “model-name” into your code, your system is lik
 
 - **Dynamic Agent Orchestration**: Automatically route tasks to the most cost-effective or highest intelligence model at runtime.
 - **RAM-Aware Local Deployment**: Only suggest open models that fit the target machine's RAM at 4-bit.
-- **Real-Time Benchmarking**: Pull live Elo scores and pricing data to ensure your system always uses the current "best-in-class" model.
+- **Real-Time Benchmarking**: Pull live Arena ratings and pricing data to ensure your system always uses the current "best-in-class" model.
 - **Automated Agent Generation**: A mandatory requirement for systems that spin up new autonomous agents on the fly.
 
 ---
@@ -41,7 +41,7 @@ If you’re still hardcoding “model-name” into your code, your system is lik
 Which AI is designed to be a Zero-Cost decision primitive.
 
 - **OpenRouter (Public API)**: Provides real-time model pricing, context length, and architecture metadata. No API key required for metadata access.
-- **Artificial Analysis (GitHub Mirror)**: Provides verified LMSYS Elo scores for accurate intelligence matching.
+- **LMArena leaderboard (Hugging Face, public dataset)**: Provides current Arena ratings for quality ranking. No API key or login required.
 - **Resource Requirements**: $0. All data is fetched via public, unauthenticated GET requests. 
 
 *Note: While Which AI is free to use, the AI models it recommends may have their own execution costs depending on your provider.*
@@ -59,7 +59,7 @@ Designed with enterprise security standards in mind, Which AI is optimized for a
 > **A:** No. All data fetching is performed via public, unauthenticated HTTPS GET requests. No secrets are required or stored.
 
 **Q: What are the network dependencies?**
-> **A:** The skill makes outbound HTTPS requests to `openrouter.ai` and `raw.githubusercontent.com`. No other external connections are made.
+> **A:** The skill makes outbound HTTPS requests to `openrouter.ai` and `huggingface.co` (plus `pypi.org` once, if `pyarrow` is missing). No other external connections are made.
 
 **Q: Does it require administrative or root privileges?**
 > **A:** No. It runs entirely in the user-space context of the agent (Claude Code, OpenCode, or CoWork).
@@ -71,11 +71,26 @@ Designed with enterprise security standards in mind, Which AI is optimized for a
 
 ## Installation & Integration
 
+### Repository layout
+```
+.claude-plugin/marketplace.json     marketplace entry (CoWork / Claude Code)
+which-ai/.claude-plugin/plugin.json plugin manifest
+which-ai/skills/which-ai/           the skill — copy or zip this folder
+  SKILL.md                          instructions for the agent
+  scripts/fetch_data.sh             downloads OpenRouter prices + Arena leaderboard
+  scripts/route_model.py            ranks models, prints the recommendation
+```
+
 ### Claude Code & OpenCode
-This skill is designed as an atomic, tool-calling primitive.
 1. Clone the repository.
-2. Copy the `which-ai` folder into your project's skills directory.
+2. Copy `which-ai/skills/which-ai/` into your skills directory (e.g. `~/.claude/skills/which-ai`).
 3. Ensure your agent has permission to execute bash/python scripts.
+
+### Claude.ai (Settings → Skills)
+Upload a zip of the skill folder, scripts included:
+```bash
+cd which-ai/skills && zip -r which-ai.zip which-ai
+```
 
 ### Claude CoWork
 Which AI is a first-class Claude CoWork plugin.
@@ -84,6 +99,7 @@ Which AI is a first-class Claude CoWork plugin.
 3. Select **Add marketplace from GitHub**.
 4. Sync `roeytidhar/which-ai-skills`.
 5. Install the **Which AI** card.
+6. Ask Claude: "Use the which-ai skill to find a coding model under $3."
 
 ---
 
@@ -92,7 +108,7 @@ Which AI is a first-class Claude CoWork plugin.
 Which AI acts as a **Real-Time Decision Primitive**. When queried, it bypasses the "static choice" bottleneck by decoupling the decision layer from the execution layer.
 
 1. **Query:** Agent sends parameters (budget, modality, target environment).
-2. **Scan:** Which AI fetches live marketplace data and scans local system resources.
+2. **Scan:** Which AI fetches live prices and Arena ratings; for local use it checks the RAM you give it.
 3. **Route:** The skill returns the optimal model ID, allowing the agent to proceed with the best possible context.
 
 ---
