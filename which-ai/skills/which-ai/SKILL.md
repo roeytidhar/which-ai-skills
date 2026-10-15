@@ -5,7 +5,7 @@ compatibility: opencode
 metadata:
   audience: agents
   workflow: routing
-  version: 2.1.1
+  version: 2.1.2
 ---
 
 # which-ai: The Intent-Based Orchestrator
@@ -45,11 +45,12 @@ datasets-server API (`data/arena_*.json`).
 
 ## 3. Run the router
 ```bash
-python3 "$SKILL_DIR/scripts/route_model.py" --budget <val> --deployment <local|cloud> \
+python3 "$SKILL_DIR/scripts/route_model.py" --deployment <local|cloud> [--budget <val>] \
   --modality <text|coding|vision> [--ram <GB>] \
   --openrouter-file data/openrouter_data.json --elo-file data/arena*
 ```
-`--ram` is required for `local`. Add `--top N` for a longer list (default 5).
+`--budget` is required for `cloud` (if the user gave none, ask — never assume one); it is ignored for
+`local`, where models are free. `--ram` is required for `local`. Add `--top N` for a longer list (default 5).
 
 ## 4. Output
 Present the router's terminal output exactly, then at most two sentences of context (for local:

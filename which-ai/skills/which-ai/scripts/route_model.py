@@ -111,7 +111,8 @@ def price_per_m(m):
 
 def main():
     ap = argparse.ArgumentParser(description="Intent-based LLM routing on LMArena ratings + OpenRouter prices.")
-    ap.add_argument("--budget", type=parse_budget, default=5.0)
+    ap.add_argument("--budget", type=parse_budget, default=None,
+                    help="USD per 1M input tokens, or free/low/medium/high (required for --deployment cloud; ignored for local)")
     ap.add_argument("--deployment", choices=["cloud", "local"], default="cloud")
     ap.add_argument("--modality", choices=list(MODALITY_SOURCE), default="text")
     ap.add_argument("--ram", type=float, default=0.0, help="RAM in GB of the machine that will run the model (required for --deployment local)")
@@ -144,6 +145,9 @@ def main():
             if need <= usable:
                 picks.append({**r, "need": need, "price": 0.0})
     else:
+        if a.budget is None:
+            print("### 🤖 which-ai Error\n> Cloud deployment needs `--budget` (USD per 1M input tokens, or free/low/medium/high). Ask the user; do not assume one.")
+            return
         if not or_models:
             print("### 🤖 which-ai Error\n> Cloud routing needs the OpenRouter file for prices (SKILL.md step 2).")
             return
@@ -172,7 +176,8 @@ def main():
 
     print("### 🤖 which-ai Recommendation")
     print(f"* **Recommended Model:** `{top.get('or_id', top['model_name'])}`" + (f" (Arena: `{top['model_name']}`)" if top.get("or_id") else ""))
-    print(f"* **Intent Parsed:** Deployment: `{a.deployment.upper()}` | Modality: `{a.modality.upper()}` | Budget: `${a.budget:.2f}`/1M input")
+    cost = "Cost: `free` (runs on your machine)" if a.deployment == "local" else f"Budget: `${a.budget:.2f}`/1M input"
+    print(f"* **Intent Parsed:** Deployment: `{a.deployment.upper()}` | Modality: `{a.modality.upper()}` | {cost}")
     print(f"* **Arena Rating:** `{top['rating']:.0f}` (95% CI {top['rating_lower']:.0f}–{top['rating_upper']:.0f}, {int(top['vote_count'])} votes) — LMArena `{cfg}/{cat}`, published {published}")
     if a.deployment == "local":
         print(f"* **RAM:** `{a.ram:.0f} GB` machine, model needs `~{top['need']:.1f} GB` at 4-bit (fits under `{a.ram * 0.75 - 4:.1f} GB` usable)")
