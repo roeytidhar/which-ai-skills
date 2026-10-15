@@ -5,7 +5,7 @@ compatibility: opencode
 metadata:
   audience: agents
   workflow: routing
-  version: 2.1.0
+  version: 2.1.1
 ---
 
 # which-ai: The Intent-Based Orchestrator
@@ -26,8 +26,9 @@ given it, find it with:
 ## 1. Analyze intent
 - **Modality:** `text`, `coding` or `vision`.
 - **Deployment:** `local` (runs on the user's own machine) or `cloud` (API).
-- **Budget** (cloud): a number in $ per 1M input tokens, or a label: `free` ($0), `low` (≤ $1), `medium` (≤ $5), `high` (≤ $100).
-  "find me" / "free" → `free`. Local models are always $0.
+- **Budget** (cloud): a number in USD per 1M input tokens, or a label: `free` (0 USD), `low` (≤ 1 USD),
+  `medium` (≤ 5 USD), `high` (≤ 100 USD). "Free" / "no cost" / "zero" → `free`. Local models are always free.
+  <!-- Never put a dollar sign directly before a digit in this file: Claude Code treats it as a skill-argument placeholder. -->
 - **RAM** (local only, required): the RAM of the machine that will run the model — NOT the machine
   running this script. On the user's Mac: `sysctl -n hw.memsize` (bytes ÷ 1024³). In a cloud session
   linked to the user's computer, read it there (device info, Activity Monitor, or a known value from
