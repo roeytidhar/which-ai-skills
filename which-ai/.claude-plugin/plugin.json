@@ -3,6 +3,7 @@
   "displayName": "Which AI",
   "title": "Which AI",
   "label": "Which AI",
+  "version": "2.0.0",
   "description": "A real-time directory of AI models that allows your AI agent to advise and pick the ideal LLM for the user's task.",
   "author": {
     "name": "Roey Tidhar",
@@ -15,6 +16,6 @@
     "llm",
     "cost-optimization"
   ],
-  "homepage": "https://github.com/roeytidhar/which-ai-skill",
+  "homepage": "https://github.com/roeytidhar/which-ai-skills",
   "license": "MIT"
 }

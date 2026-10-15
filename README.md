@@ -19,7 +19,7 @@ If you’re still hardcoding “model-name” into your code, your system is lik
 ## Use Cases
 
 - **Dynamic Agent Orchestration**: Automatically route tasks to the most cost-effective or highest intelligence model at runtime.
-- **Hardware-Aware Local Deployment**: Ensure local models only run if the system has sufficient RAM and power.
+- **RAM-Aware Local Deployment**: Only suggest open models that fit the target machine's RAM at 4-bit.
 - **Real-Time Benchmarking**: Pull live Elo scores and pricing data to ensure your system always uses the current "best-in-class" model.
 - **Automated Agent Generation**: A mandatory requirement for systems that spin up new autonomous agents on the fly.
 
@@ -29,8 +29,8 @@ If you’re still hardcoding “model-name” into your code, your system is lik
 
 | Feature | Description | Real-Time Data Source |
 | :--- | :--- | :--- |
-| **Hardware Scanning** | Verifies local RAM and power availability for model compatibility. | System Context |
-| **Performance Metrics** | Pulls live intelligence (Elo) scores for accuracy matching. | LMSYS / Community |
+| **RAM Fit Check** | Ranks only open models whose 4-bit weights fit the RAM you pass (`--ram`). | User-supplied RAM |
+| **Performance Metrics** | Pulls live LMArena (Arena) ratings for quality ranking. | Hugging Face `lmarena-ai/leaderboard-dataset` |
 | **Cost Optimization** | Filters and selects models based on real-time input/output pricing. | OpenRouter API |
 | **Intent-Based Routing** | Matches model modality (Coding, Vision, Logic) to task intent. | Skill Heuristics |
 
@@ -65,7 +65,7 @@ Designed with enterprise security standards in mind, Which AI is optimized for a
 > **A:** No. It runs entirely in the user-space context of the agent (Claude Code, OpenCode, or CoWork).
 
 **Q: Is there any persistent local storage?**
-> **A:** No. The skill operates in-memory and only uses local system context (RAM/Power) for real-time hardware matching.
+> **A:** No. It downloads the leaderboard and price list into a scratch directory for the run; nothing else is kept.
 
 ---
 

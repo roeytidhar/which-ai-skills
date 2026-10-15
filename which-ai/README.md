@@ -11,7 +11,7 @@ Which-AI acts as a dynamic router. It takes three simple inputs:
 2. **Deployment:** Are you running this in the `cloud` or on a `local` machine?
 3. **Modality:** Do you need `text`, `vision`, or `coding` capabilities?
 
-Using these inputs, the skill checks live data from OpenRouter and community Elo scores to recommend the perfect model. If you are running locally, it even checks your system's RAM to make sure the recommended model will actually fit!
+Using these inputs, the skill ranks models by their current LMArena (Arena) leaderboard rating (Hugging Face `lmarena-ai/leaderboard-dataset`) and live OpenRouter prices. For local use you pass the machine's RAM (`--ram`) and it only suggests open models that fit at 4-bit.
 
 ## How to use this skill
 
